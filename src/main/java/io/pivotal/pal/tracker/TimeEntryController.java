@@ -9,21 +9,23 @@ import java.util.List;
 @RestController
 @RequestMapping("/time-entries")
 public class TimeEntryController {
-    TimeEntryRepository timeEntryRepository;
-    public TimeEntryController(TimeEntryRepository timeEntryRepository) {
-        this.timeEntryRepository = timeEntryRepository;
+
+    private TimeEntryRepository timeEntriesRepo;
+
+    public TimeEntryController(TimeEntryRepository timeEntriesRepo) {
+        this.timeEntriesRepo = timeEntriesRepo;
     }
 
     @PostMapping
     public ResponseEntity<TimeEntry> create(@RequestBody TimeEntry timeEntry) {
-        TimeEntry createdTimeEntry = timeEntryRepository.create(timeEntry);
+        TimeEntry createdTimeEntry = timeEntriesRepo.create(timeEntry);
 
         return new ResponseEntity<>(createdTimeEntry, HttpStatus.CREATED);
     }
 
     @GetMapping("{id}")
     public ResponseEntity<TimeEntry> read(@PathVariable Long id) {
-        TimeEntry timeEntry = timeEntryRepository.find(id);
+        TimeEntry timeEntry = timeEntriesRepo.find(id);
         if (timeEntry != null) {
             return new ResponseEntity<>(timeEntry, HttpStatus.OK);
         } else {
@@ -33,12 +35,12 @@ public class TimeEntryController {
 
     @GetMapping
     public ResponseEntity<List<TimeEntry>> list() {
-        return new ResponseEntity<>(timeEntryRepository.list(), HttpStatus.OK);
+        return new ResponseEntity<>(timeEntriesRepo.list(), HttpStatus.OK);
     }
 
     @PutMapping("{id}")
     public ResponseEntity<TimeEntry> update(@PathVariable Long id, @RequestBody TimeEntry timeEntry) {
-        TimeEntry updatedTimeEntry = timeEntryRepository.update(id, timeEntry);
+        TimeEntry updatedTimeEntry = timeEntriesRepo.update(id, timeEntry);
         if (updatedTimeEntry != null) {
             return new ResponseEntity<>(updatedTimeEntry, HttpStatus.OK);
         } else {
@@ -48,7 +50,7 @@ public class TimeEntryController {
 
     @DeleteMapping("{id}")
     public ResponseEntity delete(@PathVariable Long id) {
-        timeEntryRepository.delete(id);
+        timeEntriesRepo.delete(id);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

@@ -1,13 +1,10 @@
 package io.pivotal.pal.tracker;
 
-import io.pivotal.pal.tracker.TimeEntry;
-
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InMemoryTimeEntryRepository implements TimeEntryRepository{
+public class InMemoryTimeEntryRepository implements TimeEntryRepository {
     private HashMap<Long, TimeEntry> timeEntries = new HashMap<>();
 
     private long currentId = 1L;
@@ -17,11 +14,11 @@ public class InMemoryTimeEntryRepository implements TimeEntryRepository{
         Long id = currentId++;
 
         TimeEntry newTimeEntry = new TimeEntry(
-                id,
-                timeEntry.getProjectId(),
-                timeEntry.getUserId(),
-                timeEntry.getDate(),
-                timeEntry.getHours()
+            id,
+            timeEntry.getProjectId(),
+            timeEntry.getUserId(),
+            timeEntry.getDate(),
+            timeEntry.getHours()
         );
 
         timeEntries.put(id, newTimeEntry);
@@ -43,11 +40,11 @@ public class InMemoryTimeEntryRepository implements TimeEntryRepository{
         if (find(id) == null) return null;
 
         TimeEntry updatedEntry = new TimeEntry(
-                id,
-                timeEntry.getProjectId(),
-                timeEntry.getUserId(),
-                timeEntry.getDate(),
-                timeEntry.getHours()
+            id,
+            timeEntry.getProjectId(),
+            timeEntry.getUserId(),
+            timeEntry.getDate(),
+            timeEntry.getHours()
         );
 
         timeEntries.replace(id, updatedEntry);
@@ -58,49 +55,5 @@ public class InMemoryTimeEntryRepository implements TimeEntryRepository{
     public void delete(Long id) {
         timeEntries.remove(id);
     }
-
-   /* private List<TimeEntry> timeEntryList = new ArrayList<TimeEntry>();
-    public TimeEntry create(TimeEntry timeEntry) {
-        this.timeEntryList.add(timeEntry);
-        return timeEntry;
-    }
-
-    public TimeEntry find(long id) {
-        for (TimeEntry timeEntry : timeEntryList)
-        {
-            if (timeEntry.getId() == id)
-            {
-                return timeEntry;
-            }
-        }
-        return null;
-    }
-
-
-    public List list() {
-        return this.timeEntryList;
-    }
-
-    public TimeEntry update(long id, TimeEntry timeEntry) {
-        for (TimeEntry timeEntryObj : timeEntryList)
-        {
-            if (timeEntryObj.getId() == id)
-            {
-                timeEntryList.remove(timeEntryObj);
-                timeEntryList.add(timeEntry);
-                return timeEntry;
-            }
-        }
-       return null;
-    }
-
-    public void delete(long id) {
-        for (TimeEntry timeEntry : timeEntryList)
-        {
-            if (timeEntry.getId() == id)
-            {
-                timeEntryList.remove(timeEntry);
-            }
-        }
-    }*/
 }
+
