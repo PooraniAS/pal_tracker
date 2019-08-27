@@ -1,58 +1,59 @@
-import org.flywaydb.gradle.task.FlywayMigrateTask
+import io.pivotal.pal.tracker.gradlebuild.DependenciesGraphPlugin
+
 buildscript {
     ext {
         springBootVersion = "2.0.6.RELEASE"
+        springVersion = "5.0.9.RELEASE"
+        mysqlVersion = "8.0.13"
+        jacksonVersion = "2.9.7"
+        slf4jVersion = "1.7.25"
+        mockitoVersion = "2.23.0"
+        assertJVersion = "3.11.1"
+        hikariVersion = "3.1.0"
+        logbackVersion = "1.2.3"
+        junitVersion = "4.12"
+        okhttpVersion = "3.12.0"
+        jsonPathVersion = "2.4.0"
     }
 
     repositories {
         mavenCentral()
+        jcenter()
     }
 
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+        classpath "mysql:mysql-connector-java:$mysqlVersion"
     }
 }
 
+apply plugin: DependenciesGraphPlugin
 
-plugins {
-    id "java"
-    id "org.flywaydb.flyway" version "5.0.5"
-}
+subprojects {
+    group "io.pivotal.pal.tracker"
 
-apply plugin: 'org.springframework.boot'
+    apply plugin: "java"
+    defaultTasks "clean", "build"
 
-repositories {
-    mavenCentral()
-}
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
 
-dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
-    compile("org.springframework.boot:spring-boot-starter-jdbc:$springBootVersion")
-    compile("mysql:mysql-connector-java:6.0.6")
-    testCompile("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
-    testCompile("org.mockito:mockito-core:2.23.4")
-}
+    dependencies {
+        compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+        compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+        compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+        compile "org.slf4j:slf4j-api:$slf4jVersion"
 
-bootRun.environment([
-     "WELCOME_MESSAGE": "hello",
-     "SPRING_DATASOURCE_URL": "jdbc:mysql://localhost:3306/tracker_dev?user=tracker&useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false",
-     "SPRING_DATASOURCE_PASSWORD": "admin",
-])
-def developmentDbUrl = "jdbc:mysql://localhost:3306/tracker_dev?user=tracker&useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false"
-def testDbUrl = "jdbc:mysql://localhost:3306/tracker_test?user=tracker&useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false"
+        testCompile "junit:junit:$junitVersion"
+        testCompile "org.mockito:mockito-core:$mockitoVersion"
+        testCompile "org.assertj:assertj-core:$assertJVersion"
+    }
 
-test.environment([
-     "WELCOME_MESSAGE": "Hello from test",
-     "SPRING_DATASOURCE_URL": "jdbc:mysql://localhost:3306/tracker_test?user=tracker&useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false",
-     "SPRING_DATASOURCE_PASSWORD": "admin",
-])
-flyway {
-    url = developmentDbUrl
-    user = "tracker"
-    password = ""
-    locations = ["filesystem:databases/tracker/migrations"]
-}
-
-task testMigrate(type: FlywayMigrateTask) {
-    url = testDbUrl
+    test {
+        testLogging {
+            exceptionFormat = 'full'
+        }
+    }
 }

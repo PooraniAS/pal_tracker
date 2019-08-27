@@ -87,11 +87,10 @@ public class TimeEntryApiTest {
         assertThat(readJson.read("$.hours", Long.class)).isEqualTo(8);
     }
     @Before
-
     public void setUp() throws Exception {
         MysqlDataSource dataSource = new MysqlDataSource();
         dataSource.setUrl(System.getenv("SPRING_DATASOURCE_URL"));
-       // dataSource.setPassword(System.getenv("SPRING_DATASOURCE_PASSWORD"));
+        // dataSource.setPassword(System.getenv("SPRING_DATASOURCE_PASSWORD"));
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.execute("TRUNCATE time_entries");
