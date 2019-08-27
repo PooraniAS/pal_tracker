@@ -3,7 +3,7 @@ sudo: required
 notifications:
   email: false
 env:
-  - RELEASE_TAG="release-$TRAVIS_BUILD_NUMBER"
+  - RELEASE_TAG="distributed-system"
 stages:
   - build and publish
   - deploy
